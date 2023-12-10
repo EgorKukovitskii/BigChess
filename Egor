@@ -106,27 +106,20 @@ selected_piece = None  # Выбранная фигура
 
 # Функция для проверки возможности хода для Ладьи
 def valid_move_rook(row, col, new_row, new_col, pieces):
-    # Проверяем, что начальная и конечная клетки лежат на доске
     if not (0 <= col < 10 and 0 <= row < 10 and 0 <= new_col < 10 and 0 <= new_row < 10):
         return False
-
-    # Проверяем, что конечная клетка пуста или содержит фигуру другого цвета
     if pieces[new_row][new_col] != None and pieces[new_row][new_col].color == pieces[row][col].color:
         return False
-
-    # Проверяем, что между начальной и конечной клеткой нет других фигур
     if col == new_col:
-    # Проверяем вертикальное перемещение
         start_row = min(row, new_row)
         end_row = max(row, new_row)
-        for r in range(start_row + 1, end_row):
+        for r in range(start_row+1, end_row):
             if pieces[r][col] != None:
                 return False
     else:
-    # Проверяем горизонтальное перемещение
         start_col = min(col, new_col)
         end_col = max(col, new_col)
-        for c in range(start_col + 1, end_col):
+        for c in range(start_col+1, end_col):
             if pieces[row][c] != None:
                 return False
 
@@ -142,15 +135,34 @@ def valid_move_knight(row, col, new_row, new_col):
         return False
 
 # Функция для проверки возможности хода для Слона
-def valid_move_bishop(row, col, new_row, new_col):
-    return abs(new_row - row) == abs(new_col - col)
+def valid_move_bishop(row, col, new_row, new_col, pieces):
+    if not (0 <= col < 10 and 0 <= row < 10 and 0 <= new_col < 10 and 0 <= new_row < 10):
+        return False
+
+    if pieces[new_row][new_col] != None and pieces[new_row][new_col].color == pieces[row][col].color:
+        return False
+    if abs(new_col - col) != abs(new_row - row):
+        return False
+    diff_row = new_row - row
+    diff_col = new_col - col
+    step_row = 1 if diff_row > 0 else -1
+    step_col = 1 if diff_col > 0 else -1
+    check_row = row + step_row
+    check_col = col + step_col
+    while check_row != new_row and check_col != new_col:
+        if pieces[check_row][check_col] != None:
+            return False
+        check_row += step_row
+        check_col += step_col
+    return True
 
 # Функция для проверки возможности хода для Ферзя
-def valid_move_queen(row, col, new_row, new_col):
-    return (row == new_row or col == new_col) or (abs(new_row - row) == abs(new_col - col))
-
+def valid_move_queen(row, col, new_row, new_col, pieces):
+    if  valid_move_bishop(row, col, new_row, new_col, pieces) == True or valid_move_rook(row, col, new_row, new_col, pieces) == True:
+        return True
 # Функция для проверки возможности хода для Короля
 def valid_move_king(row, col, new_row, new_col):
+
     if abs(new_row - row) <= 1 and abs(new_col - col) <= 1:
         return True
     else:
@@ -256,7 +268,32 @@ def get_possible_moves(row, col):
                 if 0 <= new_row < 10 and 0 <= new_col < 10:
                     if pieces[new_row][new_col] is None or pieces[new_row][new_col].color != pieces[row][col].color:
                         possible_moves.append((new_row, new_col))
-
+    if selected_piece.type == 'bishop':
+        bishop_moves = [(i, i) for i in range(-9, 10)] + [(i, -i) for i in range(-9, 10)]
+        for move in bishop_moves:
+            new_row = row + move[0]
+            new_col = col + move[1]
+            if 0 <= new_row < 10 and 0 <= new_col < 10:
+                if pieces[new_row][new_col] is None or pieces[new_row][new_col].color != pieces[row][col].color:
+                    if valid_move_bishop(row, col, new_row, new_col, pieces) == True:
+                        possible_moves.append((new_row, new_col))
+    if selected_piece.type == 'queen':
+        bishop_moves = [(i, i) for i in range(-9, 10)] + [(i, -i) for i in range(-9, 10)]
+        for move in bishop_moves:
+            new_row = row + move[0]
+            new_col = col + move[1]
+            if 0 <= new_row < 10 and 0 <= new_col < 10:
+                if pieces[new_row][new_col] is None or pieces[new_row][new_col].color != pieces[row][col].color:
+                    if valid_move_bishop(row, col, new_row, new_col, pieces) == True:
+                        possible_moves.append((new_row, new_col))
+        rook_moves = [(i, 0) for i in range(-9, 10)] + [(0, i) for i in range(-9, 10)]
+        for move in rook_moves:
+            new_row = row + move[0]
+            new_col = col + move[1]
+            if 0 <= new_row < 10 and 0 <= new_col < 10:
+                if pieces[new_row][new_col] is None or pieces[new_row][new_col].color != pieces[row][col].color:
+                    if valid_move_rook(row, col, new_row, new_col, pieces) == True:
+                        possible_moves.append((new_row, new_col))
     return possible_moves
 
 
@@ -298,7 +335,7 @@ while running:
                     for move in possible_moves:
                         # Отобразить маркеры или подсветку для возможных ходов
                         move_row, move_col = move
-                        circles.append((screen, (0, 255, 0), ((move_col + 0.5) * CELL_SIZE, (move_row + 0.5) * CELL_SIZE), CELL_SIZE//8))
+                        circles.append((screen, (0, 128, 0), ((move_col + 0.5) * CELL_SIZE, (move_row + 0.5) * CELL_SIZE), CELL_SIZE//8))
             else:
                 new_row, new_col = clicked_row, clicked_col
                 if (new_row, new_col) in possible_moves:
