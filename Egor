@@ -126,7 +126,7 @@ def valid_move_rook(row, col, new_row, new_col, pieces):
     # Проверяем горизонтальное перемещение
         start_col = min(col, new_col)
         end_col = max(col, new_col)
-        for c in range(start_col + 1, end_col-1):
+        for c in range(start_col + 1, end_col):
             if pieces[row][c] != None:
                 return False
 
