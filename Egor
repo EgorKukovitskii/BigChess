@@ -104,6 +104,50 @@ pieces = [
 
 selected_piece = None  # Выбранная фигура
 
+
+def check_castle(pieces, row, col, new_row, new_col):
+    piece = pieces[row][col]
+
+    # Проверяем, что фигура - король
+    if piece != "king":
+        return False
+
+    # Проверяем, что движение по вертикали на 2 клетки
+    if abs(new_col - col) != 2:
+        return False
+
+    # Проверяем, что король и ладья не двигались до этого
+    if col == 0:
+        rook = pieces[row][0]
+        if rook != "rook":
+            return False
+        if pieces[row][1] != None or pieces[row][2] != None or pieces[row][3] != None:
+            return False
+
+    elif col == 9:
+        rook = pieces[row][9]
+        if rook != "rook":
+            return False
+        if pieces[row][7] != None or pieces[row][8] != None:
+            return False
+
+    return True
+
+def perform_castle(pieces, row, col, new_row, new_col):
+    piece = pieces[row][col]
+    pieces[row][col] = ' '
+
+    if new_col == 2:
+        pieces[row][0] = None
+        pieces[row][3] = "king"
+        pieces[row][new_col] = piece
+        pieces[row][new_col + 1] = "rook"
+    else:
+        pieces[row][9] = None
+        pieces[row][7] = "rook"
+        pieces[row][new_col] = piece
+        pieces[row][new_col - 1] = "rook"
+
 # Функция для проверки возможности хода для Ладьи
 def valid_move_rook(row, col, new_row, new_col, pieces):
     if not (0 <= col < 10 and 0 <= row < 10 and 0 <= new_col < 10 and 0 <= new_row < 10):
@@ -124,15 +168,6 @@ def valid_move_rook(row, col, new_row, new_col, pieces):
                 return False
 
     return True
-
-# Функция для проверки возможности хода для Коня
-def valid_move_knight(row, col, new_row, new_col):
-    if abs(new_row - row) == 2 and abs(new_col - col) == 1:
-        return True
-    elif abs(new_row - row) == 1 and abs(new_col - col) == 2:
-        return True
-    else:
-        return False
 
 # Функция для проверки возможности хода для Слона
 def valid_move_bishop(row, col, new_row, new_col, pieces):
@@ -157,52 +192,7 @@ def valid_move_bishop(row, col, new_row, new_col, pieces):
     return True
 
 # Функция для проверки возможности хода для Ферзя
-def valid_move_queen(row, col, new_row, new_col, pieces):
-    if  valid_move_bishop(row, col, new_row, new_col, pieces) == True or valid_move_rook(row, col, new_row, new_col, pieces) == True:
-        return True
-# Функция для проверки возможности хода для Короля
-def valid_move_king(row, col, new_row, new_col):
 
-    if abs(new_row - row) <= 1 and abs(new_col - col) <= 1:
-        return True
-    else:
-        return False
-
-# Функция для проверки возможности хода для Шамана
-def valid_move_shaman(row, col, new_row, new_col):
-    if abs(new_row - row) <= 1 and abs(new_col - col) <= 1:
-        return True
-    else:
-        return False
-
-# Функция для проверки возможности хода для Пешки
-def valid_move_pawn(row, col, new_row, new_col, player_color):
-    if player_color == "white":
-        direction = -1
-        starting_row = 8
-    else:
-        direction = 1
-        starting_row = 1
-
-    # Передвижение на одну клетку вперед
-    if col == new_col and row + direction == new_row and pieces[new_row][new_col] is None:
-        return True
-
-    # Передвижение на две клетки вперед из начальной позиции
-    if col == new_col and row + 2 * direction == new_row and row == starting_row and pieces[row + direction][col] is None and pieces[new_row][new_col] is None:
-        return True
-
-    # Взятие фигуры по диагонали
-    if abs(new_col - col) == 1 and row + direction == new_row and pieces[new_row][new_col] is not None and pieces[row][col].color != pieces[new_row][new_col].color:
-        return True
-    # Взятие вражеской пешки на проходе
-    # if abs(new_col - col) == 1 and row + direction == new_row and pieces[new_row][new_col] is None and
-    # превращение в фигуру
-
-    return False
-
-
-# Функция для получения возможных ходов для выбранной фигуры
 def get_possible_moves(row, col):
     possible_moves = []
     # Возможные ходы для пешки
@@ -218,6 +208,9 @@ def get_possible_moves(row, col):
         if new_row >= 0 and new_row < 10 and new_col >= 0 and new_col < 10 and pieces[new_row][new_col] is None:
             possible_moves.append((new_row, new_col))
 
+
+
+
         # Проверка возможности хода на две клетки вперед из начальной позиции
         if (player_turn == "white" and row == 8) or (player_turn == "black" and row == 1):
             new_row = row + 2 * direction
@@ -231,6 +224,29 @@ def get_possible_moves(row, col):
             new_col = col + i
             if new_row >= 0 and new_row < 10 and new_col >= 0 and new_col < 10 and pieces[new_row][new_col] is not None and pieces[row][col].color != pieces[new_row][new_col].color:
                 possible_moves.append((new_row, new_col))
+
+        if player_turn == 'black':
+            for l in range(0, 10):
+                if pieces[0][l] == pawn1_white:
+                    pieces[0][l] = queen_white
+                if pieces[0][l] == pawn2_white:
+                    pieces[0][l] = queen_white
+                if pieces[0][l] == pawn3_white:
+                    pieces[0][l] = queen_white
+                if pieces[0][l] == pawn4_white:
+                    pieces[0][l] = queen_white
+                if pieces[0][l] == pawn5_white:
+                    pieces[0][l] = queen_white
+                if pieces[0][l] == pawn6_white:
+                    pieces[0][l] = queen_white
+                if pieces[0][l] == pawn7_white:
+                    pieces[0][l] = queen_white
+                if pieces[0][l] == pawn8_white:
+                    pieces[0][l] = queen_white
+                if pieces[0][l] == pawn9_white:
+                    pieces[0][l] = queen_white
+                if pieces[0][l] == pawn10_white:
+                    pieces[0][l] = queen_white
     if selected_piece.type == 'king':
         for i in range(-1, 2):
             for j in range(-1, 2):
@@ -241,6 +257,16 @@ def get_possible_moves(row, col):
                 if 0 <= new_row < 10 and 0 <= new_col < 10:
                     if pieces[new_row][new_col] is None or pieces[new_row][new_col].color != pieces[row][col].color:
                         possible_moves.append((new_row, new_col))
+                    if player_turn == 'white':
+                        if (pieces[9][9] == rook2_white and pieces[9][8] == None and pieces[9][7] == None and pieces[9][6] == None and pieces[9][5] == king_white):
+                            possible_moves.append((9,7))
+                            pieces[9][9] = None
+                            pieces[9][6] = rook2_white
+                        if (pieces[9][0] == rook1_white and pieces[9][1] == None and pieces[9][2] == None and pieces[9][3] == None and pieces[9][4] == None and pieces[9][5] == king_white):
+                            possible_moves.append((9,3))
+                            pieces[9][0] = None
+                            pieces[9][4] = rook1_white
+
     if selected_piece.type == 'knight':
         knight_moves = [(-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1)]
         for move in knight_moves:
@@ -295,6 +321,9 @@ def get_possible_moves(row, col):
                     if valid_move_rook(row, col, new_row, new_col, pieces) == True:
                         possible_moves.append((new_row, new_col))
     return possible_moves
+
+
+
 
 
 # Функция для отображения доски и фигур
