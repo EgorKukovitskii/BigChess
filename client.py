@@ -322,7 +322,6 @@ while running:
                 if selected_piece is not None and selected_piece.color == player_turn:
                     possible_moves = get_possible_moves(clicked_row, clicked_col)
                     position = (clicked_row, clicked_col)
-                    print(possible_moves, 'отсюда можно попасть в эти позиции')
                     for move in possible_moves:
                         # Отобразить подсветку для возможных ходов
                         move_row, move_col = move
@@ -339,8 +338,6 @@ while running:
                     pieces[new_row][new_col] = selected_piece
                     pieces[position[0]][position[1]] = None
                     player_turn = "black" if player_turn == "white" else "white"
-                else:
-                    print(possible_moves, 'он не наступил, потому что нельзя')
                 for i in range(10):
                     if pieces[0][i]!=None and pieces[0][i].type=='pawn':
                         if pieces[0][i].color=='white':
