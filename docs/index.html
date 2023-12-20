@@ -164,6 +164,16 @@
             </div>
         
 
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="client.NotInPiecesError.html" class="internal-link" title="client.NotInPiecesError"><wbr></wbr>Not<wbr></wbr>In<wbr></wbr>Pieces<wbr></wbr>Error</a></code>
+            </div>
+        
+
     </li>
 </ul>
 
@@ -207,6 +217,16 @@
 
         
             <div class="itemName"><code><a href="#valid_move_rook" class="internal-link" title="client.valid_move_rook">valid<wbr></wbr>_move<wbr></wbr>_rook</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#warn_message" class="internal-link" title="client.warn_message">warn<wbr></wbr>_message</a></code>
             </div>
         
 
@@ -376,6 +396,26 @@
 
         
             <div class="itemName"><code><a href="#COLS" class="internal-link" title="client.COLS">COLS</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#font_large" class="internal-link" title="client.font_large">font<wbr></wbr>_large</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#font_medium" class="internal-link" title="client.font_medium">font<wbr></wbr>_medium</a></code>
             </div>
         
 
@@ -762,6 +802,11 @@
     <td>Class</td>
     <td><code><a href="client.Piece.html" class="internal-link" title="client.Piece"><wbr></wbr>Piece</a></code></td>
     <td>class for chess figure object :param color: color of figure :type color: str :param type: type of figure :type type: str :param image: image of figure :type image: png</td>
+  </tr><tr class="exception">
+    
+    <td>Exception</td>
+    <td><code><a href="client.NotInPiecesError.html" class="internal-link" title="client.NotInPiecesError"><wbr></wbr>Not<wbr></wbr>In<wbr></wbr>Pieces<wbr></wbr>Error</a></code></td>
+    <td>Class of Error, that raised when Index is not correct</td>
   </tr><tr class="function">
     
     <td>Function</td>
@@ -782,6 +827,11 @@
     <td>Function</td>
     <td><code><a href="#valid_move_rook" class="internal-link" title="client.valid_move_rook">valid<wbr></wbr>_move<wbr></wbr>_rook</a></code></td>
     <td>Returns is this move is valid for rook</td>
+  </tr><tr class="function">
+    
+    <td>Function</td>
+    <td><code><a href="#warn_message" class="internal-link" title="client.warn_message">warn<wbr></wbr>_message</a></code></td>
+    <td>Displaying a notification on the screen</td>
   </tr><tr class="constant">
     
     <td>Constant</td>
@@ -861,6 +911,16 @@
     
     <td>Variable</td>
     <td><code><a href="#COLS" class="internal-link" title="client.COLS">COLS</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="variable">
+    
+    <td>Variable</td>
+    <td><code><a href="#font_large" class="internal-link" title="client.font_large">font<wbr></wbr>_large</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="variable">
+    
+    <td>Variable</td>
+    <td><code><a href="#font_medium" class="internal-link" title="client.font_medium">font<wbr></wbr>_medium</a></code></td>
     <td><span class="undocumented">Undocumented</span></td>
   </tr><tr class="variable">
     
@@ -1081,7 +1141,7 @@
   </div>
   <div class="docstring functionBody">
     
-    <div><p>Returns all possible moves for figure in &lt;row&gt; row and &lt;col&gt; col</p><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">row:</span><code>int</code></td><td class="fieldArgDesc">figure row</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">col:</span><code>int</code></td><td class="fieldArgDesc">figure col</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code>list</code></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table></div>
+    <div><p>Returns all possible moves for figure in &lt;row&gt; row and &lt;col&gt; col</p><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">row:</span><code>int</code></td><td class="fieldArgDesc">figure row</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">col:</span><code>int</code></td><td class="fieldArgDesc">figure col</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code>list</code></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Raises</td></tr><tr><td class="fieldArgContainer"><code><a href="client.NotInPiecesError.html" class="internal-link" title="client.NotInPiecesError">NotInPiecesError</a></code></td><td>if row or col &gt;= 10 or &lt;0</td></tr></table></div>
   </div>
 </div><div class="basefunction">
   
@@ -1130,6 +1190,30 @@
   <div class="docstring functionBody">
     
     <div><p>Returns is this move is valid for rook</p><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">row:</span><code>int</code></td><td class="fieldArgDesc">row of figure position</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">col:</span><code>int</code></td><td class="fieldArgDesc">col of figure position</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">new<wbr></wbr>_row:</span><code>int</code></td><td class="fieldArgDesc">row of clicked position</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">new<wbr></wbr>_col:</span><code>int</code></td><td class="fieldArgDesc">col of clicked position</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">pieces:</span><code>list</code></td><td class="fieldArgDesc">array of all chess table</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code>bool</code></td><td class="fieldArgDesc">True or False that defines validity</td></tr></table></div>
+  </div>
+</div><div class="basefunction">
+  
+  
+  <a name="client.warn_message">
+    
+  </a>
+  <a name="warn_message">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span> <span class="py-defname">warn_message</span><span class="function-signature">(message)</span>:
+    
+    <a class="headerLink" href="#warn_message" title="client.warn_message">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Displaying a notification on the screen</p></div>
   </div>
 </div><div class="baseconstant">
   
@@ -1505,6 +1589,54 @@
     <span class="py-defname">COLS</span> =
     
     <a class="headerLink" href="#COLS" title="client.COLS">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="basevariable">
+  
+  
+  <a name="client.font_large">
+    
+  </a>
+  <a name="font_large">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">font_large</span> =
+    
+    <a class="headerLink" href="#font_large" title="client.font_large">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="basevariable">
+  
+  
+  <a name="client.font_medium">
+    
+  </a>
+  <a name="font_medium">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">font_medium</span> =
+    
+    <a class="headerLink" href="#font_medium" title="client.font_medium">
       
       
       ¶
@@ -2319,7 +2451,7 @@
   <div class="container">
     <a href="index.html">API Documentation</a> for client,
   generated by <a href="https://github.com/twisted/pydoctor/">pydoctor</a>
-    23.9.1 at 2023-12-20 14:04:05.
+    23.9.1 at 2023-12-20 15:24:06.
   </div>
 
   <!-- Search related scripts needs to be loaded at the end of HTML 

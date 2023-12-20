@@ -1,4 +1,5 @@
 import pygame
+from time import sleep
 
 # Инициализация Pygame
 pygame.init()
@@ -13,6 +14,10 @@ WIDTH, HEIGHT = 800, 800
 # Размеры и количество клеток на игровой доске
 ROWS, COLS = 10, 10
 CELL_SIZE = WIDTH // COLS
+
+# Шрифты
+font_large = pygame.font.Font(None, 48)
+font_medium = pygame.font.Font(None, 36)
 
 # Создание окна
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -146,18 +151,25 @@ def valid_move_bishop(row: int, col: int, new_row: int, new_col: int, pieces: li
         check_col += step_col
     return True
 
-
+class NotInPiecesError(IndexError):
+    '''Class of Error, that raised when Index is not correct'''
+    def __init__(self, message="Piece not found in the pieces list."):
+        self.message = message
+        super().__init__(self.message)
+            
 # Функция для получения возможных ходов для выбранной фигуры
 def get_possible_moves(row: int, col: int) -> list:
     '''Returns all possible moves for figure in <row> row and <col> col
 
     :param row: figure row
     :param col: figure col
+    :raises NotInPiecesError: if row or col >= 10 or <0
     '''
-
     possible_moves = []
+    if row>=10 or col>=10 or row<0 or col<0:
+        raise NotInPiecesError
     # Возможные ходы для пешки
-    if selected_piece.type == "pawn":
+    elif selected_piece.type == "pawn":
         if player_turn == "white":
             direction = -1
         else:
@@ -181,7 +193,7 @@ def get_possible_moves(row: int, col: int) -> list:
             new_col = col + i
             if new_row >= 0 and new_row < 10 and new_col >= 0 and new_col < 10 and pieces[new_row][new_col] is not None and pieces[row][col].color != pieces[new_row][new_col].color:
                 possible_moves.append((new_row, new_col))
-    if selected_piece.type == 'king':
+    elif selected_piece.type == 'king':
         for i in range(-1, 2):
             for j in range(-1, 2):
                 if i == 0 and j == 0:
@@ -191,7 +203,7 @@ def get_possible_moves(row: int, col: int) -> list:
                 if 0 <= new_row < 10 and 0 <= new_col < 10:
                     if pieces[new_row][new_col] is None or pieces[new_row][new_col].color != pieces[row][col].color:
                         possible_moves.append((new_row, new_col))
-    if selected_piece.type == 'knight':
+    elif selected_piece.type == 'knight':
         knight_moves = [(-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1)]
         for move in knight_moves:
             new_row = row + move[0]
@@ -199,7 +211,7 @@ def get_possible_moves(row: int, col: int) -> list:
             if 0 <= new_row < 10 and 0 <= new_col < 10:
                 if pieces[new_row][new_col] is None or pieces[new_row][new_col].color != pieces[row][col].color:
                     possible_moves.append((new_row, new_col))
-    if selected_piece.type == 'rook':
+    elif selected_piece.type == 'rook':
         rook_moves = [(i, 0) for i in range(-9, 10)] + [(0, i) for i in range(-9, 10)]
         for move in rook_moves:
             new_row = row + move[0]
@@ -208,7 +220,7 @@ def get_possible_moves(row: int, col: int) -> list:
                 if pieces[new_row][new_col] is None or pieces[new_row][new_col].color != pieces[row][col].color:
                     if valid_move_rook(row, col, new_row, new_col, pieces) == True:
                         possible_moves.append((new_row, new_col))
-    if selected_piece.type == 'shaman':
+    elif selected_piece.type == 'shaman':
         bishop_moves = [(i, i) for i in range(-9, 10)] + [(i, -i) for i in range(-9, 10)]
         for move in bishop_moves:
             new_row = row + move[0]
@@ -216,14 +228,6 @@ def get_possible_moves(row: int, col: int) -> list:
             if 0 <= new_row < 10 and 0 <= new_col < 10:
                 if pieces[new_row][new_col] is None or pieces[new_row][new_col].color != pieces[row][col].color:
                     if valid_move_bishop(row, col, new_row, new_col, pieces) == True:
-                        possible_moves.append((new_row, new_col))
-        rook_moves = [(i, 0) for i in range(-9, 10)] + [(0, i) for i in range(-9, 10)]
-        for move in rook_moves:
-            new_row = row + move[0]
-            new_col = col + move[1]
-            if 0 <= new_row < 10 and 0 <= new_col < 10:
-                if pieces[new_row][new_col] is None or pieces[new_row][new_col].color != pieces[row][col].color:
-                    if valid_move_rook(row, col, new_row, new_col, pieces) == True:
                         possible_moves.append((new_row, new_col))
         knight_moves = [(-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1)]
         for move in knight_moves:
@@ -233,7 +237,7 @@ def get_possible_moves(row: int, col: int) -> list:
                 if pieces[new_row][new_col] is None or pieces[new_row][new_col].color != pieces[row][col].color:
                     possible_moves.append((new_row, new_col))
                         
-    if selected_piece.type == 'bishop':
+    elif selected_piece.type == 'bishop':
         bishop_moves = [(i, i) for i in range(-9, 10)] + [(i, -i) for i in range(-9, 10)]
         for move in bishop_moves:
             new_row = row + move[0]
@@ -242,7 +246,7 @@ def get_possible_moves(row: int, col: int) -> list:
                 if pieces[new_row][new_col] is None or pieces[new_row][new_col].color != pieces[row][col].color:
                     if valid_move_bishop(row, col, new_row, new_col, pieces) == True:
                         possible_moves.append((new_row, new_col))
-    if selected_piece.type == 'queen':
+    elif selected_piece.type == 'queen':
         bishop_moves = [(i, i) for i in range(-9, 10)] + [(i, -i) for i in range(-9, 10)]
         for move in bishop_moves:
             new_row = row + move[0]
@@ -259,25 +263,45 @@ def get_possible_moves(row: int, col: int) -> list:
                 if pieces[new_row][new_col] is None or pieces[new_row][new_col].color != pieces[row][col].color:
                     if valid_move_rook(row, col, new_row, new_col, pieces) == True:
                         possible_moves.append((new_row, new_col))
+    
     return possible_moves
 
 
 # Функция для отображения доски и фигур
 def draw_board():
     '''Draw the board with chess figures'''
-    for row in range(ROWS):
-        for col in range(COLS):
-            color = LIGHT_SQUARE if (row + col) % 2 == 0 else DARK_SQUARE
-            pygame.draw.rect(screen, color, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-            # Отображение изображений фигур на доске
-            piece = pieces[row][col]
-            if piece:
-                screen.blit(piece.image, (col * CELL_SIZE, row * CELL_SIZE))
-    for cir in circles:
-        pygame.draw.circle(*cir)
+    global winner
+    if not(winner):
+        for row in range(ROWS):
+            for col in range(COLS):
+                color = LIGHT_SQUARE if (row + col) % 2 == 0 else DARK_SQUARE
+                pygame.draw.rect(screen, color, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                # Отображение изображений фигур на доске
+                piece = pieces[row][col]
+                if piece:
+                    screen.blit(piece.image, (col * CELL_SIZE, row * CELL_SIZE))
+        for cir in circles:
+            pygame.draw.circle(*cir)
+    else:
+        sleep(5)
 
+    
+
+# Функция для отображения сообщений
+def warn_message(message):
+    '''Displaying a notification on the screen'''
+    global button_exit_rect, button_retry_rect
+    screen.fill((200, 200, 200))
+
+    # Вывод сообщения о разрыве соединения
+    text = font_medium.render(message, True, (0,0,0))
+    text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 3))
+    screen.blit(text, text_rect)
+
+    pygame.display.flip()
 
 # Основной игровой цикл
+winner = False
 running = True
 selected_piece = None
 player_turn = "white"  # Начинает белый игрок
@@ -286,6 +310,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+            
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
             clicked_row = mouse_y // CELL_SIZE
@@ -307,6 +332,10 @@ while running:
             else:
                 new_row, new_col = clicked_row, clicked_col
                 if (new_row, new_col) in possible_moves:
+                    if pieces[new_row][new_col]!=None and pieces[new_row][new_col].type == 'king':
+                        warn_message('Вы победили!')
+                        running=False
+                        winner=True
                     pieces[new_row][new_col] = selected_piece
                     pieces[position[0]][position[1]] = None
                     player_turn = "black" if player_turn == "white" else "white"
@@ -329,5 +358,6 @@ while running:
     # Отображение доски и фигур
     draw_board()
     pygame.display.flip()
+
 
 pygame.quit()
